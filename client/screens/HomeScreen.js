@@ -123,8 +123,7 @@ function HomeScreen() {
                 borderWidth: 0.5, // Add border width
                 borderColor: "#f97316",// Set border color
                 borderRadius: 15,
-                margin: 10,
-                padding: 10
+                margin: 10
               }}>
                 < ResturantCard
                   key={index}

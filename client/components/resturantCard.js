@@ -12,7 +12,7 @@ function ResturantCard({ item
     <TouchableWithoutFeedback
       onPress={() => navigation.navigate("Restaurant", { ...item })}
     >
-      <View style={{ shadowColor: themeColors.bgColor(0.2) }} className="mr-6 bg-white rounded-3xl shadow-lg">
+      <View style={{ shadowColor: themeColors.bgColor(0.2) }} className=" bg-white rounded-3xl shadow-lg">
         <Image className="h-36 w-64 rounded-3xl" source={{ uri: urlForImage(item.image).url() }} />
         <View className="px-3 pb-4 space-y-2">
           <Text className="text-lg font-bold pt-2">{item.name}</Text>

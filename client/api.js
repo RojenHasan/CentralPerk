@@ -40,3 +40,17 @@ export const getFeaturedResturantById = id => {
         }[0]
     `, { id })
 }
+
+export const getAllRestaurants = () => {
+    return sanityQuery(`
+    *[_type == 'resturant'] {
+      ...,
+      type->{
+        name
+      },
+      dishes[]->{
+        ...
+      }
+    }
+  `);
+}

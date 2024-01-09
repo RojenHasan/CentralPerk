@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StatusBar } from 'react-native';
+import { ScrollView, StatusBar, TouchableOpacity, Image } from 'react-native';
 import { TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { View, Text } from 'react-native';
 import * as Icon from "react-native-feather"
 import { themeColors } from '../theme';
-import Categories from '../components/categories';
-import FeaturedRow from '../components/featuredRow';
-import { getFeaturedResturants } from '../api';
+import { getCategories } from "../api"
+import { urlForImage } from "../sanity"
+
+import { getAllRestaurants } from '../api';
 //import { featuredResturants } from "../constants"
+import ResturantCard from '../components/resturantCard';
 
 function HomeScreen() {
   let [featuredResturants, setFeaturedResturants] = useState([])
+  let [activeCategory, setActivecategory] = useState("all")
+  let [categories, setCategories] = useState([])
 
   // Call all feature to filter from it , istead of making query with every litter that the user writes 
   let [allFeaturedResturants, setAllFeaturedResturants] = useState([])
@@ -26,14 +30,35 @@ function HomeScreen() {
       setFeaturedResturants(filteredFeatures);
     }
   }
+
+  const handleCategory = category => {
+    const name = category.name.toLowerCase()
+    if (name == "all") {
+      setFeaturedResturants(allFeaturedResturants)
+    } else {
+      const filteredFeatures = allFeaturedResturants.filter(feature =>
+        feature.type.name.toLowerCase().startsWith(name)
+      );
+      setFeaturedResturants(filteredFeatures);
+    }
+
+    setActivecategory(name)
+  }
   useEffect(() => {
-    getFeaturedResturants().then(data => {
+    getAllRestaurants().then(data => {
       setFeaturedResturants(data)
       setAllFeaturedResturants(data)
-
     })
   }, [])
+
+  useEffect(() => {
+    getCategories().then(data => {
+      setCategories(data)
+    })
+  }, [])
+
   return (
+
     //SafeAreaView is currently only applicable to iOS devices with iOS version 11 or later.
     <SafeAreaView className="bg-white" style={{ flex: 100 }}>
       {/* Search Bar */}
@@ -56,22 +81,65 @@ function HomeScreen() {
         paddingBottom: 20
       }}>
         {/* Categories */}
-        <Categories />
+
+        <View className="mt-4">
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="overflow-visible"
+            contentContainerStyle={{
+              paddingHorizontal: 15
+            }}
+          >
+            {
+              categories.map((category, index) => {
+                let isActive = category.name.toLowerCase() == activeCategory
+                let btnClass = isActive ? 'bg-gray-600' : 'bg-gray-200'
+                let textClass = isActive ? 'font-semibold text-gray-800' : 'text-gray-500'
+
+                return (
+                  <View key={index} className="flex justify-center items-center mr-6">
+                    <TouchableOpacity className={"p-1 rounded-full shadow bg-gray-200 " + btnClass} onPress={() => {
+                      handleCategory(category)
+                    }}>
+                      <Image style={{ width: 45, height: 45 }} source={{ uri: urlForImage(category.image).url() }}
+                      />
+
+                    </TouchableOpacity>
+                    <Text className={"text-sm " + textClass}>{category.name}</Text>
+                  </View>
+                )
+              })
+            }
+
+          </ScrollView>
+        </View>
+
         {/* Featured */}
         <View className="mt-5">
-          {
-            featuredResturants?.map((item, index) => {
-              return <FeaturedRow
-                key={index}
-                title={item.name}
-                resturants={item.restaurants}
-                description={item.description}
-              />
-            })
-          }
+          {featuredResturants && featuredResturants.length !== 0 ? (
+            featuredResturants.map((resturant, index) => (
+              <View className="" style={{
+                borderWidth: 0.5, // Add border width
+                borderColor: "#f97316",// Set border color
+                borderRadius: 15,
+                margin: 10,
+                padding: 10
+              }}>
+                < ResturantCard
+                  key={index}
+                  item={resturant}
+                />
+              </View>
+
+            ))
+          ) : (
+            ""
+          )}
+
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 }
 

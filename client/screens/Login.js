@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth } from 'firebase/auth'; 
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import firebaseApp from '../firebase';
 
 const Login = ({ navigation }) => {
@@ -15,7 +15,7 @@ const Login = ({ navigation }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       // If login is successful, navigate to the Welcome screen
-      navigation.navigate('Welcome', { userEmail: email });
+      navigation.navigate('Home');
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

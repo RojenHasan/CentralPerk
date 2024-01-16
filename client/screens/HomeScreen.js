@@ -119,12 +119,7 @@ function HomeScreen() {
         <View className="mt-5">
           {featuredResturants && featuredResturants.length !== 0 ? (
             featuredResturants.map((resturant, index) => (
-              <View className="" style={{
-                borderWidth: 0.5, // Add border width
-                borderColor: "#f97316",// Set border color
-                borderRadius: 15,
-                margin: 10
-              }}>
+              <View>
                 < ResturantCard
                   key={index}
                   item={resturant}

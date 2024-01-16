@@ -19,12 +19,13 @@ const Login = ({ navigation }) => {
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
-
       // Handle different error codes and provide user-friendly messages
       if (errorCode === 'auth/invalid-email' || errorCode === 'auth/user-not-found') {
-        setError('Invalid email address. Please check your email and try again.');
-      } else if (errorCode === 'auth/wrong-password') {
-        setError('Incorrect password. Please check your password and try again.');
+        setError('Please check your email and try again.');
+      } else if (errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-credential' || errorCode === 'auth/missing-password') {
+        setError('Please check your password and try again.');
+      } else if (errorCode === 'auth/too-many-requests') {
+        setError('Too many tries please try again later.');
       } else {
         setError(errorMessage);
       }
@@ -42,14 +43,17 @@ const Login = ({ navigation }) => {
 
       // Handle different error codes and provide user-friendly messages
       if (errorCode === 'auth/email-already-in-use') {
-        setError('Email address is already in use. Please use a different email.');
+        setError('Email address is already in use, please use a different email.');
       } else if (errorCode === 'auth/invalid-email') {
-        setError('Invalid email address. Please check your email and try again.');
+        setError('Please check your email and try again.');
+      } else if (errorCode === 'auth/missing-password' || errorCode === 'auth/weak-password') {
+        setError('Password must be minimum 8 characters.');
       } else {
         setError(errorMessage);
       }
     }
   };
+
 
   return (
     <ImageBackground
@@ -58,7 +62,9 @@ const Login = ({ navigation }) => {
     >
       <View style={styles.container}>
         <View style={styles.overlay}>
-          <Text style={styles.title}>Login or Register</Text>
+          <Text style={styles.title}>Login/Register</Text>
+          {error && <Text style={styles.errorText}>{error}</Text>}
+
           <TextInput
             style={styles.input}
             placeholder="Email"
@@ -78,7 +84,6 @@ const Login = ({ navigation }) => {
           <TouchableOpacity style={styles.button} onPress={handleSignUp}>
             <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
-          {error && <Text style={styles.errorText}>{error}</Text>}
         </View>
       </View>
     </ImageBackground>

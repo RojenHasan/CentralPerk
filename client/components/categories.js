@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native"
-//import { categories } from "../constants"
 import { useEffect } from "react"
 import { getCategories } from "../api"
 import { urlForImage } from "../sanity"
